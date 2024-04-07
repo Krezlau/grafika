@@ -38,9 +38,6 @@ def project(points_to_project):
             
     return projected_points
 
-# points = []
-# connections = []
-
 (points, connections) = parse('scene1.obj')
 print(points)
 
@@ -97,7 +94,8 @@ while True:
     for i in range(len(projected_points)):
         x = (projected_points[i][0, 0])/projected_points[i][3, 0] * WIDTH + WIDTH/2
         y = (projected_points[i][1, 0])/projected_points[i][3, 0] * HEIGHT + HEIGHT/2
-        screen.blit(pygame.font.SysFont('Arial', 24).render(str(i), True, WHITE), (x, y))
+        # screen.blit(pygame.font.SysFont('Arial', 24).render(str(i), True, WHITE), (x, y))
+        pygame.draw.circle(screen, RED, (x, y), 1)
         for connection in connections[i]:
             x2 = (projected_points[connection][0, 0])/projected_points[connection][3, 0] * WIDTH + WIDTH/2
             y2 = (projected_points[connection][1, 0])/projected_points[connection][3, 0] * HEIGHT + HEIGHT/2
