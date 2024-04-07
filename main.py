@@ -3,6 +3,7 @@ import numpy as np
 from math import *
 
 from actions import translate, rotate
+from scene_parser import parse
 
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
@@ -37,45 +38,10 @@ def project(points_to_project):
             
     return projected_points
 
-points = []
-connections = []
+# points = []
+# connections = []
 
-# all the cube vertices
-points.append(np.matrix([1, 1, 1, 1]).reshape((4, 1)))
-points.append(np.matrix([2, 1, 1, 1]).reshape((4, 1)))
-points.append(np.matrix([2, 1, 2, 1]).reshape((4, 1)))
-points.append(np.matrix([1, 1, 2, 1]).reshape((4, 1)))
-points.append(np.matrix([1, 2, 1, 1]).reshape((4, 1)))
-points.append(np.matrix([2, 2, 1, 1]).reshape((4, 1)))
-points.append(np.matrix([2, 2, 2, 1]).reshape((4, 1)))
-points.append(np.matrix([1, 2, 2, 1]).reshape((4, 1)))
-
-connections.append([1, 3, 4])
-connections.append([0, 2, 5])
-connections.append([1, 3, 6])
-connections.append([0, 2, 7])
-connections.append([0, 5, 7])
-connections.append([1, 4, 6, 3])
-connections.append([2, 5, 7])
-connections.append([3, 4, 6])
-
-points.append(np.matrix([5, 1, 1, 1]).reshape((4, 1)))
-points.append(np.matrix([6, 1, 1, 1]).reshape((4, 1)))
-points.append(np.matrix([6, 1, 2, 1]).reshape((4, 1)))
-points.append(np.matrix([5, 1, 2, 1]).reshape((4, 1)))
-points.append(np.matrix([5, 4, 1, 1]).reshape((4, 1)))
-points.append(np.matrix([6, 4, 1, 1]).reshape((4, 1)))
-points.append(np.matrix([6, 4, 2, 1]).reshape((4, 1)))
-points.append(np.matrix([5, 4, 2, 1]).reshape((4, 1)))
-
-connections.append([9, 11, 12])
-connections.append([8, 10, 13])
-connections.append([9, 11, 14])
-connections.append([8, 10, 15])
-connections.append([8, 13, 15])
-connections.append([9, 12, 14])
-connections.append([10, 13, 15])
-connections.append([11, 12, 14])
+(points, connections) = parse('scene1.obj')
 print(points)
 
 pygame.font.init()
