@@ -21,7 +21,7 @@ f = 1
 transformation_matrix = np.matrix([
     [1/((WIDTH/HEIGHT) * tan(45)), 0, 0, 0],
     [0, 1/tan(45), 0, 0],
-    [0, 0, f/(f-n), f*n/(n-f)],
+    [0, 0, f/(f-n), -f*n/(f-n)],
     [0, 0, 1, 0]
 ])
 
@@ -50,10 +50,27 @@ connections.append([0, 2, 5])
 connections.append([1, 3, 6])
 connections.append([0, 2, 7])
 connections.append([0, 5, 7])
-connections.append([1, 4, 6])
+connections.append([1, 4, 6, 3])
 connections.append([2, 5, 7])
 connections.append([3, 4, 6])
 
+points.append(np.matrix([5, 1, 1, 1]).reshape((4, 1)))
+points.append(np.matrix([6, 1, 1, 1]).reshape((4, 1)))
+points.append(np.matrix([6, 1, 2, 1]).reshape((4, 1)))
+points.append(np.matrix([5, 1, 2, 1]).reshape((4, 1)))
+points.append(np.matrix([5, 4, 1, 1]).reshape((4, 1)))
+points.append(np.matrix([6, 4, 1, 1]).reshape((4, 1)))
+points.append(np.matrix([6, 4, 2, 1]).reshape((4, 1)))
+points.append(np.matrix([5, 4, 2, 1]).reshape((4, 1)))
+
+connections.append([9, 11, 12])
+connections.append([8, 10, 13])
+connections.append([9, 11, 14])
+connections.append([8, 10, 15])
+connections.append([8, 13, 15])
+connections.append([9, 12, 14])
+connections.append([10, 13, 15])
+connections.append([11, 12, 14])
 print(points)
 
 pygame.font.init()
@@ -99,11 +116,11 @@ while True:
     if keys[pygame.K_a]:
         points = translate(-0.1, 0, 0, points)
     if keys[pygame.K_w]:
-        # points = translate(0, 0, 1, points)
-        scale += 0.1
+        points = translate(0, 0, 0.1, points)
+        # scale += 0.1
     if keys[pygame.K_s]:
-        # points = translate(0, 0, -1, points)
-        scale -= 0.1
+        points = translate(0, 0, -0.1, points)
+        # scale -= 0.1
     if keys[pygame.K_LSHIFT]:
         points = translate(0, 0.1, 0, points)
     if keys[pygame.K_SPACE]:
@@ -121,17 +138,17 @@ while True:
     
     # project
     projected_points = project(points)
-    print(projected_points)
+    # print(projected_points)
     
     # draw
     for i in range(len(points)):
-        x = points[i][0, 0] * scale + WIDTH/2
-        y = points[i][1, 0] * scale + HEIGHT/2
-        # pygame.draw.circle(screen, RED, (x, y), 5)
+        print(points[i])
+        x = (projected_points[i][0, 0])/projected_points[i][3, 0] * 1000 + WIDTH/2
+        y = (projected_points[i][1, 0])/projected_points[i][3, 0] * 1000 + HEIGHT/2
         screen.blit(pygame.font.SysFont('Arial', 24).render(str(i), True, WHITE), (x, y))
         for connection in connections[i]:
-            x2 = points[connection][0, 0] * scale + WIDTH/2
-            y2 = points[connection][1, 0] * scale + HEIGHT/2
+            x2 = (projected_points[connection][0, 0])/projected_points[connection][3, 0] * 1000 + WIDTH/2
+            y2 = (projected_points[connection][1, 0])/projected_points[connection][3, 0] * 1000 + HEIGHT/2
             pygame.draw.line(screen, WHITE, (x, y), (x2, y2), 2)
     
     pygame.display.update()
