@@ -19,9 +19,13 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 n = 0
 f = 1
 
+global fov
+global transformation_matrix
+
+fov = 90
 transformation_matrix = np.matrix([
-    [1/((WIDTH/HEIGHT) * tan(45)), 0, 0, 0],
-    [0, 1/tan(45), 0, 0],
+    [1/((WIDTH/HEIGHT) * tan(radians(fov)/2)), 0, 0, 0],
+    [0, 1/(tan(radians(fov)/2)), 0, 0],
     [0, 0, f/(f-n), -f*n/(f-n)],
     [0, 0, 1, 0]
 ])
@@ -83,23 +87,46 @@ while True:
         points = rotate(angle, 'z', points)
     if keys[pygame.K_e]:
         points = rotate(-angle, 'z', points)
+    if keys[pygame.K_z]:
+        if fov < 179:
+            fov += 1
+        transformation_matrix = np.matrix([
+            [1/((WIDTH/HEIGHT) * tan(radians(fov)/2)), 0, 0, 0],
+            [0, 1/(tan(radians(fov)/2)), 0, 0],
+            [0, 0, f/(f-n), -f*n/(f-n)],
+            [0, 0, 1, 0]
+        ])
+    if keys[pygame.K_x]:
+        if (fov > 1):
+            fov -= 1
+        transformation_matrix = np.matrix([
+            [1/((WIDTH/HEIGHT) * tan(radians(fov)/2)), 0, 0, 0],
+            [0, 1/(tan(radians(fov)/2)), 0, 0],
+            [0, 0, f/(f-n), -f*n/(f-n)],
+            [0, 0, 1, 0]
+        ]) 
+        
 
     screen.fill(BLACK)
     
     # project
     projected_points = project(points)
     # print(projected_points)
+    # print(transformation_matrix)
+    print(fov)
     
     # draw
     for i in range(len(projected_points)):
+        if (projected_points[i][1, 0] < -HEIGHT):
+            continue
         x = (projected_points[i][0, 0])/projected_points[i][3, 0] * WIDTH + WIDTH/2
         y = (projected_points[i][1, 0])/projected_points[i][3, 0] * HEIGHT + HEIGHT/2
         # screen.blit(pygame.font.SysFont('Arial', 24).render(str(i), True, WHITE), (x, y))
-        pygame.draw.circle(screen, RED, (x, y), 1)
+        # pygame.draw.circle(screen, RED, (x, y), 1)
         for connection in connections[i]:
             x2 = (projected_points[connection][0, 0])/projected_points[connection][3, 0] * WIDTH + WIDTH/2
             y2 = (projected_points[connection][1, 0])/projected_points[connection][3, 0] * HEIGHT + HEIGHT/2
             pygame.draw.line(screen, WHITE, (x, y), (x2, y2), 2)
-    
+
+
     pygame.display.update()
-    
