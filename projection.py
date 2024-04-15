@@ -76,59 +76,48 @@ def clip_lines(points, codes, connections, screen):
             if codes[i] & codes[connection] != 0:
                 continue
             if not (codes[i] | codes[connection]):
-                # print(points[i][2])
-                draw(points[i][0], points[i][1], points[i][2], points[connection][0], points[connection][1], points[connection][2], screen)
+                draw(points[i][0], points[i][1], points[connection][0], points[connection][1], screen)
             else:
-
-                if codes[i] > codes[connection]:
-                    code = codes[i]
-                    x0 = points[connection][0]
-                    y0 = points[connection][1]
-                    z0 = points[connection][2]
-                    w0 = points[connection][3]
-                    x1 = points[i][0]
-                    y1 = points[i][1]
-                    z1 = points[i][2]
-                    w1 = points[i][3]
-                else:
-                    code = codes[connection]
-                    x0 = points[i][0]
-                    y0 = points[i][1]
-                    z0 = points[i][2]
-                    w0 = points[i][3]
-                    x1 = points[connection][0]
-                    y1 = points[connection][1]
-                    z1 = points[connection][2]
-                    w1 = points[connection][3]
-
-                if code & FRONT:
-                    continue
-                elif code & BEHIND:
-                    if round(z1, 4) == 0:
-                        continue
-                    print(x1, y1, z1, w1)
-                    x = x0 + (x1 - x0) * (zmax - z0) / (z1 - z0)
-                    y = y0 + (y1 - y0) * (zmax - z0) / (z1 - z0)
-                    draw(x0, y0, w0, x, y, w1, screen)
-                elif code & TOP:
-                    x = x0 + (x1 - x0) * (ymax - y0) / (y1 - y0)
-                    y = ymax
-                    draw(x0, y0, w0, x, y, w1, screen)
-                elif code & BOTTOM:
-                    x = x0 + (x1 - x0) * (ymin - y0) / (y1 - y0)
-                    y = ymin
-                    draw(x0, y0, w0, x, y, w1, screen)
-                elif code & RIGHT:
-                    y = y0 + (y1 - y0) * (xmax - x0) / (x1 - x0)
-                    x = xmax
-                    draw(x0, y0, w0, x, y, w1, screen)
-                elif code & LEFT:
-                    y = y0 + (y1 - y0) * (xmin - x0) / (x1 - x0)
-                    x = xmin
-                    draw(x0, y0, w0, x, y, w1, screen)
+                x0, y0 = clip_points(codes[i], points[i][0], points[i][1], points[i][2], points[connection][0], points[connection][1], points[connection][2])
+                x1, y1 = clip_points(codes[connection], points[connection][0], points[connection][1], points[connection][2], points[i][0], points[i][1], points[i][2])
+                if x0 is not None and x1 is not None and y0 is not None and y1 is not None:
+                    draw(x0, y0, x1, y1, screen)
+                # if x0 is not None and y0 is not None:
+                #     draw(x0, y0, points[connection][0], points[connection][1], screen)
 
 
-def draw(x0, y0, w0, x1, y1, w1, screen):
+
+def clip_points(code, x0, y0, z0, x1, y1, z1):
+    x = None
+    y = None
+    if code == INSIDE:
+        return x0, y0
+    
+    if code & FRONT:
+        return x, y
+    elif code & BEHIND:
+        if round(z1, 4) == 0:
+            return x, y
+        x = x0 + (x1 - x0) * (zmax - z0) / (z1 - z0)
+        y = y0 + (y1 - y0) * (zmax - z0) / (z1 - z0)
+        print(x, y)
+    elif code & TOP:
+        x = x0 + (x1 - x0) * (ymax - y0) / (y1 - y0)
+        y = ymax
+    elif code & BOTTOM:
+        x = x0 + (x1 - x0) * (ymin - y0) / (y1 - y0)
+        y = ymin
+    elif code & RIGHT:
+        y = y0 + (y1 - y0) * (xmax - x0) / (x1 - x0)
+        x = xmax
+    elif code & LEFT:
+        y = y0 + (y1 - y0) * (xmin - x0) / (x1 - x0)
+        x = xmin
+        
+    return x, y
+
+
+def draw(x0, y0, x1, y1, screen):
     X0 = x0 * WIDTH + WIDTH/2
     Y0 = y0 * HEIGHT + HEIGHT/2
     X1 = x1 * WIDTH + WIDTH/2

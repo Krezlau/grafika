@@ -16,8 +16,8 @@ my_font = pygame.font.SysFont('Comic Sans MS', 30)
 angle = 0.025
 fov = 90
 
-# DEBUG = True
-DEBUG = False
+DEBUG = True
+# DEBUG = False
 
 init(DEBUG)
 
