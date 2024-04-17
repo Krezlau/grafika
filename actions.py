@@ -2,7 +2,6 @@
 from math import *
 
 
-
 def translate(x, y, z, points):
     translation_matrix = np.matrix([
         [1, 0, 0, x],
@@ -13,8 +12,8 @@ def translate(x, y, z, points):
     translated_points = []
     for point in points:
         translated_points.append(np.dot(translation_matrix, point))
-        print(translated_points[-1])
     return translated_points
+
 
 def rotate(angle, axis, points):
     if axis == 'x':

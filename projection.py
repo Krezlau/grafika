@@ -7,7 +7,7 @@ WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 BLACK = (0, 0, 0)
 
-# codes 
+# codes
 INSIDE = 0
 LEFT = 1
 RIGHT = 2
@@ -41,7 +41,9 @@ def init(DEBUG):
 
 # transformation matrix
 n = 0
-f = 1000
+f = 1
+
+
 def transformation_matrix(fov):
     return np.matrix([
         [1/((WIDTH/HEIGHT) * tan(radians(fov)/2)), 0, 0, 0],
@@ -49,7 +51,6 @@ def transformation_matrix(fov):
         [0, 0, f/(f-n), -f*n/(f-n)],
         [0, 0, 1, 0]
     ])
-
 
 
 def determine_code(point):
@@ -82,9 +83,6 @@ def clip_lines(points, codes, connections, screen):
                 x1, y1 = clip_points(codes[connection], points[connection][0], points[connection][1], points[connection][2], points[i][0], points[i][1], points[i][2])
                 if x0 is not None and x1 is not None and y0 is not None and y1 is not None:
                     draw(x0, y0, x1, y1, screen)
-                # if x0 is not None and y0 is not None:
-                #     draw(x0, y0, points[connection][0], points[connection][1], screen)
-
 
 
 def clip_points(code, x0, y0, z0, x1, y1, z1):
@@ -96,11 +94,10 @@ def clip_points(code, x0, y0, z0, x1, y1, z1):
     if code & FRONT:
         return x, y
     elif code & BEHIND:
-        if round(z1, 4) == 0:
+        if round(z0, 4) == 0:
             return x, y
         x = x0 + (x1 - x0) * (zmax - z0) / (z1 - z0)
         y = y0 + (y1 - y0) * (zmax - z0) / (z1 - z0)
-        print(x, y)
     elif code & TOP:
         x = x0 + (x1 - x0) * (ymax - y0) / (y1 - y0)
         y = ymax
@@ -131,7 +128,7 @@ def project(points_to_project, tm):
     for point in points_to_project:
 
         projection = np.dot(tm, point)
-        projected_points.append([projection[0, 0]/projection[3,0], projection[1, 0]/projection[3,0], point[2, 0], projection[3, 0]])
+        projected_points.append([projection[0, 0]/projection[3,0], projection[1, 0]/projection[3,0], projection[2, 0], projection[3, 0]])
         codes.append(determine_code(projected_points[-1]))
 
     return projected_points, codes
