@@ -12,12 +12,15 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.font.init()
 my_font = pygame.font.SysFont('Comic Sans MS', 30)
 
-angle = 0.0125
+angle = 0.5
 fov = 90
 
 # If DEBUG is True, the screen will be smaller and the boundaries will be drawn
 # DEBUG = True
 DEBUG = False
+
+# STATICMODE = False
+STATICMODE = True
 
 init(DEBUG)
 
@@ -41,38 +44,70 @@ while True:
                     speed = 2
                 else:
                     speed = 1
+            if STATICMODE:
+                if event.key == pygame.K_d:
+                    points = translate(10 * speed * -0.05, 0, 0, points)
+                if event.key == pygame.K_a:
+                    points = translate(10 * speed * 0.05, 0, 0, points)
+                if event.key == pygame.K_w:
+                    points = translate(0, 0, 10 * speed * -0.05, points)
+                if event.key == pygame.K_s:
+                    points = translate(0, 0, 10 * speed * 0.05, points)
+                if event.key == pygame.K_LSHIFT:
+                    points = translate(0, 10 * speed * -0.05, 0, points)
+                if event.key == pygame.K_SPACE:
+                    points = translate(0, 10 * speed * 0.05, 0, points)
+                if event.key == pygame.K_LEFT:
+                    points = rotate(10 * speed * angle, 'y', points)
+                if event.key == pygame.K_RIGHT:
+                    points = rotate(10 * speed * -angle, 'y', points)
+                if event.key == pygame.K_UP:
+                    points = rotate(10 * speed * -angle, 'x', points)
+                if event.key == pygame.K_DOWN:
+                    points = rotate(10 * speed * angle, 'x', points)
+                if event.key == pygame.K_q:
+                    points = rotate(10 * speed * angle, 'z', points)
+                if event.key == pygame.K_e:
+                    points = rotate(10 * speed * -angle, 'z', points)
+                if event.key == pygame.K_z:
+                    if fov < 179:
+                        fov += 10
+                if event.key == pygame.K_x:
+                    if fov > 1:
+                        fov -= 10
                 
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_d]:
-        points = translate(speed * -0.05, 0, 0, points)
-    if keys[pygame.K_a]:
-        points = translate(speed * 0.05, 0, 0, points)
-    if keys[pygame.K_w]:
-        points = translate(0, 0, speed * -0.05, points)
-    if keys[pygame.K_s]:
-        points = translate(0, 0, speed * 0.05, points)
-    if keys[pygame.K_LSHIFT]:
-        points = translate(0, speed * -0.05, 0, points)
-    if keys[pygame.K_SPACE]:
-        points = translate(0, speed * 0.05, 0, points)
-    if keys[pygame.K_LEFT]:
-        points = rotate(speed * angle, 'y', points)
-    if keys[pygame.K_RIGHT]:
-        points = rotate(speed * -angle, 'y', points)
-    if keys[pygame.K_UP]:
-        points = rotate(speed * -angle, 'x', points)
-    if keys[pygame.K_DOWN]:
-        points = rotate(speed * angle, 'x', points)
-    if keys[pygame.K_q]:
-        points = rotate(speed * angle, 'z', points)
-    if keys[pygame.K_e]:
-        points = rotate(speed * -angle, 'z', points)
-    if keys[pygame.K_z]:
-        if fov < 179:
-            fov += 1
-    if keys[pygame.K_x]:
-        if fov > 1:
-            fov -= 1
+    if not STATICMODE:
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_d]:
+            points = translate(speed * -0.05, 0, 0, points)
+        if keys[pygame.K_a]:
+            points = translate(speed * 0.05, 0, 0, points)
+        if keys[pygame.K_w]:
+            points = translate(0, 0, speed * -0.05, points)
+        if keys[pygame.K_s]:
+            points = translate(0, 0, speed * 0.05, points)
+        if keys[pygame.K_LSHIFT]:
+            points = translate(0, speed * -0.05, 0, points)
+        if keys[pygame.K_SPACE]:
+            points = translate(0, speed * 0.05, 0, points)
+        if keys[pygame.K_LEFT]:
+            points = rotate(speed * angle, 'y', points)
+        if keys[pygame.K_RIGHT]:
+            points = rotate(speed * -angle, 'y', points)
+        if keys[pygame.K_UP]:
+            points = rotate(speed * -angle, 'x', points)
+        if keys[pygame.K_DOWN]:
+            points = rotate(speed * angle, 'x', points)
+        if keys[pygame.K_q]:
+            points = rotate(speed * angle, 'z', points)
+        if keys[pygame.K_e]:
+            points = rotate(speed * -angle, 'z', points)
+        if keys[pygame.K_z]:
+            if fov < 179:
+                fov += 1
+        if keys[pygame.K_x]:
+            if fov > 1:
+                fov -= 1
         
     tm = transformation_matrix(fov)
     screen.fill(BLACK)
