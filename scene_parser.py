@@ -4,6 +4,7 @@
 def parse(filename):
     points = []
     connections = []
+    faces = []
     with open(filename) as f:
         lines = f.readlines()
         
@@ -21,10 +22,12 @@ def parse(filename):
                 points.append(np.matrix(matrix).reshape((4, 1)))
             elif line.split()[0] == 'l':
                 connections.append([int(i) for i in line[2:].split()])
+            elif line.split()[0] == 'f':
+                faces.append([int(i) for i in line[2:].split()])
             else:
                 continue
                 
     while len(connections) < len(points):
         connections.append([])
         
-    return points, connections
+    return points, connections, faces

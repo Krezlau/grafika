@@ -1,13 +1,14 @@
 ﻿import pygame
 
 from actions import translate, rotate
+from face_printer import print_faces
 from projection import WIDTH, HEIGHT, transformation_matrix, BLACK, project, clip_lines, draw_boundaries, init
 from scene_parser import parse
 
-pygame.display.set_caption("grafika 1")
+pygame.display.set_caption("grafika")
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
-(points, connections) = parse('scene1.obj')
+(points, connections, faces) = parse('scene1.obj')
 
 pygame.font.init()
 my_font = pygame.font.SysFont('Comic Sans MS', 30)
@@ -114,6 +115,8 @@ while True:
 
     (projected_points, codes) = project(points, tm)
     clip_lines(projected_points, codes, connections, screen)
+    print_faces(projected_points, points, faces, screen)
+    
     if DEBUG:
         draw_boundaries(screen)
     pygame.display.update()
