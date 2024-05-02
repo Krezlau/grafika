@@ -40,8 +40,8 @@ def init(DEBUG):
 
 
 # transformation matrix
-n = 0
-f = 1
+n = -100
+f = 1000
 
 
 def transformation_matrix(fov):
