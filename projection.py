@@ -129,6 +129,7 @@ def project(points_to_project, tm):
 
         projection = np.dot(tm, point)
         projected_points.append([projection[0, 0]/projection[3,0], projection[1, 0]/projection[3,0], projection[2, 0]/projection[3,0], projection[3, 0]])
+        # print(projected_points[-1])
         codes.append(determine_code(projected_points[-1]))
 
     return projected_points, codes
