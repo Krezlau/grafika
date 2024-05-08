@@ -116,9 +116,9 @@ while True:
     # clip_lines(projected_points, codes, connections, screen)
     print_faces(projected_points, points, faces, screen, WIDTH, HEIGHT)
     
-    # for i in range(8):
-    #     text = my_font.render(str(i), False, (255, 255, 255))
-    #     screen.blit(text, (int(projected_points[i][0] * WIDTH + WIDTH/2), int(projected_points[i][1] * HEIGHT + HEIGHT/2)))
+    for i in range(8):
+        text = my_font.render(str(i), False, (255, 255, 255))
+        screen.blit(text, (int(projected_points[i][0] * WIDTH + WIDTH/2), int(projected_points[i][1] * HEIGHT + HEIGHT/2)))
     #     pygame.draw.circle(screen, (0, 255, 0), (int(projected_points[i][0] * WIDTH + WIDTH/2), int(projected_points[i][1] * HEIGHT + HEIGHT/2)), 5)
     # 
     if DEBUG:
