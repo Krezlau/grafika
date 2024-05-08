@@ -35,7 +35,7 @@ def print_faces(projected_points, points, faces, screen, WIDTH, HEIGHT):
                     tempy = (i - HEIGHT/2) / HEIGHT
                     tempx = (x - WIDTH/2) / WIDTH
                     depths = list(map(lambda p: [((-p[0] * tempx - p[1] * tempy - p[3]) / p[2]) if p[2] != 0 else p[7], p[4]], active_polygons))
-                    depths.sort(key=lambda lmao: float(lmao[0]), reverse=True)
+                    depths.sort(key=lambda lmao: float(lmao[0]))
                     color = depths[0][1]
                     pygame.draw.circle(screen, color, (x, i), 1)
             
@@ -59,7 +59,7 @@ def construct_edge_table(faces, projected_points, points, width, height):
         edges.append(construct_edge(point1, point2, width, height, id))
         edges.append(construct_edge(point2, point0, width, height, id))
         
-        plane_eq = construct_plane_eq(point0[0], point0[1], point0[2], point1[0], point1[1], point1[2], point2[0], point2[1], point2[2])
+        plane_eq = construct_plane_eq(point0[0], point0[1], point0[3], point1[0], point1[1], point1[3], point2[0], point2[1], point2[3])
         
         polygons.append(plane_eq + [(face[3], face[4], face[5]), 0, 0, point0[2] if plane_eq[2] == 0 else 0])
         id += 1
